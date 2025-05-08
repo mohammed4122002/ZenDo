@@ -9,7 +9,9 @@ import {
     TableRow,
   } from "@/components/ui/table"
 import { Button } from "./ui/button"
-import { Pen, Trash } from "lucide-react"
+import {  Pen, Trash } from "lucide-react"
+import ITodo from "@/interfaces"
+import { Badge } from "./ui/badge"
   
   const invoices = [
     {
@@ -56,7 +58,7 @@ import { Pen, Trash } from "lucide-react"
     },
   ]
   
-  export default function ToDoTable() {
+  export default function ToDoTable({todos} :{todos:ITodo[]}) {
     return (
       <Table>
         <TableCaption>A list of your recent invoices.</TableCaption>
@@ -71,11 +73,11 @@ import { Pen, Trash } from "lucide-react"
           </TableRow>
         </TableHeader>
         <TableBody>
-          {invoices.map((invoice) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">6819e16a089d6899d97516fd</TableCell>
-              <TableCell>Crapula amitto vere celebrer.</TableCell>
-              <TableCell>Completed</TableCell>
+          {todos.map((todo) => (
+            <TableRow key={todo.id}>
+              <TableCell className="font-medium">{todo.id}</TableCell>
+              <TableCell>{todo.title}</TableCell>
+              <TableCell>{todo.completed ?  <Badge>Completed</Badge> :<Badge variant={"secondary"}>UnCompleted</Badge> }</TableCell>
               <TableCell className="text-right flex items-center justify-end gap-2">
                 <Button size={"icon"}><Pen size={16}/></Button>
                <Button size={"icon"} variant={"destructive"}><Trash size={16}/></Button>
@@ -86,7 +88,7 @@ import { Pen, Trash } from "lucide-react"
         <TableFooter>
           <TableRow>
             <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">{invoices.length}</TableCell>
+            <TableCell className="text-right">{todos.length}</TableCell>
           </TableRow>
         </TableFooter>
       </Table>
