@@ -39,7 +39,7 @@ const EditTodoForm = ({todo}: {todo:ITodo}) => {
   const [open, setOpen] = useState(false);
   const defaultValues: Partial<todoFormValues> = {
     title:todo.title,
-    body:todo.body ? todo.body : " ",
+    body:todo.body as string,
     completed:todo.completed,
   };
 
@@ -57,7 +57,7 @@ const EditTodoForm = ({todo}: {todo:ITodo}) => {
 
    await updateTodoAction({id:todo.id , body :data.body , title : data.title , completed: data.completed , createdAt:todo.createdAt});
     setLoading(false);
-    form.reset();
+   
     setOpen(false);
     
 
