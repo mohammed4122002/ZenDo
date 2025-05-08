@@ -1,12 +1,14 @@
 "use server";
 
+import ITodo from "@/interfaces";
 import { PrismaClient } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 
 const prisma = new PrismaClient();
 
 export const getTodosAction = async () => {
   const todos = await prisma.todo.findMany({
-    orderBy: {
+   orderBy: {
       createdAt: "desc",
     },
   });
@@ -19,11 +21,13 @@ export const createTodoAction = async ({title , body , completed} :  {title: str
 
   const todo = await prisma.todo.create({
     data: {
+    
       title,
       body,
       completed
     },
   });
+  revalidatePath("/")
   return todo;
 };
 
@@ -33,26 +37,32 @@ export const createTodoAction = async ({title , body , completed} :  {title: str
 
 export const deleteTodoAction = async (id: string) => {
 
-  const todo = await prisma.todo.delete({
+  await prisma.todo.delete({
     where: {
       id,
     },
   });
-  return todo;
-};
-export const updateTodoAction = async (data: FormData) => {
+  revalidatePath("/")
 
-  const id = data.get("id")?.toString() || "";
-  const title = data.get("title")?.toString() || "";
-  const body = data.get("body")?.toString() || "";
-  const todo = await prisma.todo.update({
+
+
+};
+
+
+
+
+export const updateTodoAction = async ( {id , title , body , completed ,createdAt}: ITodo) => {
+
+ 
+      await prisma.todo.update({
     where: {
       id,
     },
     data: {
       title,
       body,
+      completed
     },
   });
-  return todo;
+  revalidatePath("/")
 };
